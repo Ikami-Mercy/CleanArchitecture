@@ -1,5 +1,8 @@
 package com.gelostech.cleanarchitecture.di.modules
 
+import android.arch.lifecycle.ViewModelProvider
+import com.gelostech.cleanarchitecture.data.repositories.PostsRepository
+import com.gelostech.cleanarchitecture.di.ViewModelFactory
 import com.gelostech.cleanarchitecture.utils.ApiService
 import com.gelostech.cleanarchitecture.utils.Endpoints
 import com.google.gson.Gson
@@ -45,6 +48,18 @@ open class NetworkModule {
     @Singleton
     fun getApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePostsRepository(apiService: ApiService): PostsRepository {
+        return PostsRepository(apiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideViewModelFactory(postsRepository: PostsRepository): ViewModelProvider.Factory {
+        return ViewModelFactory(postsRepository)
     }
 
 }
