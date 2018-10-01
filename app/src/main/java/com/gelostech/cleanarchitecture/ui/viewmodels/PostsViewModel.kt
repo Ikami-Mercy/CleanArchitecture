@@ -8,6 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 class PostsViewModel(private val postsRepository: PostsRepository) : ViewModel() {
     private val disposables = CompositeDisposable()
@@ -20,6 +21,7 @@ class PostsViewModel(private val postsRepository: PostsRepository) : ViewModel()
     fun fetchPosts() {
 
         disposables.add(postsRepository.fetchPosts()
+                .debounce(400, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { responseLiveData.value = PostsResponse.loading() }

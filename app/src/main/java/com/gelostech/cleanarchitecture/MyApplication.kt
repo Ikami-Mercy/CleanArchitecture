@@ -6,6 +6,7 @@ import com.gelostech.cleanarchitecture.di.AppComponent
 import com.gelostech.cleanarchitecture.di.DaggerAppComponent
 import com.gelostech.cleanarchitecture.di.modules.AppModule
 import com.gelostech.cleanarchitecture.di.modules.NetworkModule
+import com.gelostech.cleanarchitecture.di.modules.RoomModule
 import dagger.Component
 import timber.log.Timber
 
@@ -22,6 +23,7 @@ class MyApplication : MultiDexApplication() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .networkModule(NetworkModule())
+                .roomModule(RoomModule(this))
                 .build()
     }
 

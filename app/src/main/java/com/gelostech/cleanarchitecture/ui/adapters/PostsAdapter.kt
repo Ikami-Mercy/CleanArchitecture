@@ -6,6 +6,7 @@ import com.gelostech.cleanarchitecture.R
 import com.gelostech.cleanarchitecture.data.models.Post
 import com.gelostech.cleanarchitecture.databinding.ItemPostBinding
 import com.gelostech.cleanarchitecture.utils.inflate
+import timber.log.Timber
 
 class PostsAdapter : RecyclerView.Adapter<PostsAdapter.PostHolder>() {
     private val posts = mutableListOf<Post>()
@@ -13,6 +14,8 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.PostHolder>() {
     fun addPosts(posts: List<Post>) {
         this.posts.addAll(posts)
         notifyDataSetChanged()
+
+        Timber.e("Posts count: $itemCount")
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): PostHolder {

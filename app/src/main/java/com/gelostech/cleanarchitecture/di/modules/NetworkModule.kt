@@ -1,6 +1,7 @@
 package com.gelostech.cleanarchitecture.di.modules
 
 import android.arch.lifecycle.ViewModelProvider
+import com.gelostech.cleanarchitecture.data.daos.PostsDao
 import com.gelostech.cleanarchitecture.data.repositories.PostsRepository
 import com.gelostech.cleanarchitecture.di.ViewModelFactory
 import com.gelostech.cleanarchitecture.utils.ApiService
@@ -52,8 +53,8 @@ open class NetworkModule {
 
     @Provides
     @Singleton
-    fun providePostsRepository(apiService: ApiService): PostsRepository {
-        return PostsRepository(apiService)
+    fun providePostsRepository(apiService: ApiService, postsDao: PostsDao): PostsRepository {
+        return PostsRepository(apiService, postsDao)
     }
 
     @Provides
