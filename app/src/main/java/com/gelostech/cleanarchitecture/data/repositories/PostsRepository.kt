@@ -1,13 +1,17 @@
 package com.gelostech.cleanarchitecture.data.repositories
 
+import android.annotation.SuppressLint
 import com.gelostech.cleanarchitecture.data.daos.PostsDao
 import com.gelostech.cleanarchitecture.data.models.Post
 import com.gelostech.cleanarchitecture.utils.ApiService
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class PostsRepository(private val apiService: ApiService, private val postsDao: PostsDao) {
+@Singleton
+class PostsRepository @Inject constructor(private val apiService: ApiService, private val postsDao: PostsDao) {
 
     fun fetchPosts(): Observable<List<Post>> {
         return Observable.concatArray(
@@ -36,6 +40,7 @@ class PostsRepository(private val apiService: ApiService, private val postsDao: 
                 }
     }
 
+    @SuppressLint("CheckResult")
     private fun savePosts(posts: List<Post>) {
         Observable.fromCallable { postsDao.insertAll(posts) }
                 .subscribeOn(Schedulers.io())

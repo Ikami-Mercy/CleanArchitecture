@@ -9,8 +9,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class PostsViewModel(private val postsRepository: PostsRepository) : ViewModel() {
+class PostsViewModel @Inject constructor(private val postsRepository: PostsRepository) : ViewModel() {
     private val disposables = CompositeDisposable()
     private val responseLiveData = MutableLiveData<PostsResponse>()
 

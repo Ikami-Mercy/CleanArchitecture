@@ -1,9 +1,11 @@
 package com.gelostech.cleanarchitecture.ui.activities
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import com.gelostech.cleanarchitecture.MyApplication
 import com.gelostech.cleanarchitecture.R
@@ -14,20 +16,25 @@ import com.gelostech.cleanarchitecture.ui.adapters.PostsAdapter
 import com.gelostech.cleanarchitecture.ui.viewmodels.PostsViewModel
 import com.gelostech.cleanarchitecture.utils.hideView
 import com.gelostech.cleanarchitecture.utils.showView
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
     private lateinit var viewmodel: PostsViewModel
     private lateinit var adapter: PostsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        (application as MyApplication).getAppComponent().inject(this)
 
         viewmodel = ViewModelProviders.of(this, viewModelFactory).get(PostsViewModel::class.java)
 
@@ -37,6 +44,8 @@ class MainActivity : AppCompatActivity() {
             handleResponse(it!!)
         })
         viewmodel.fetchPosts()
+
+
     }
 
     private fun initViews() {
@@ -66,5 +75,9 @@ class MainActivity : AppCompatActivity() {
                 error.showView()
             }
         }
+    }
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+        return dispatchingAndroidInjector
     }
 }

@@ -2,23 +2,25 @@ package com.gelostech.cleanarchitecture.di
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.gelostech.cleanarchitecture.data.repositories.PostsRepository
-import com.gelostech.cleanarchitecture.ui.viewmodels.PostsViewModel
+import dagger.MapKey
 import javax.inject.Inject
+import javax.inject.Provider
+import javax.inject.Singleton
+import kotlin.reflect.KClass
 
-class ViewModelFactory : ViewModelProvider.Factory {
-    private lateinit var postsRepository: PostsRepository
+@Singleton
+class ViewModelFactory @Inject constructor(private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>) : ViewModelProvider.Factory {
 
-    @Inject
-    constructor(postsRepository: PostsRepository) {
-        this.postsRepository = postsRepository
-    }
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        val creator = creators[modelClass] ?:
+        creators.asIterable().firstOrNull { modelClass.isAssignableFrom(it.key) }?.value
+        ?: throw IllegalArgumentException("unknown model class $modelClass")
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(PostsViewModel::class.java)) {
-            return PostsViewModel(postsRepository) as T
+        return try {
+            creator.get() as T
+        } catch (e: Exception) {
+            throw RuntimeException(e)
         }
 
-        throw IllegalArgumentException("Unknown class name")
     }
 }

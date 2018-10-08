@@ -1,38 +1,28 @@
 package com.gelostech.cleanarchitecture
 
-import android.content.Context
+import android.app.Activity
 import android.support.multidex.MultiDexApplication
-import com.gelostech.cleanarchitecture.di.AppComponent
 import com.gelostech.cleanarchitecture.di.DaggerAppComponent
-import com.gelostech.cleanarchitecture.di.modules.AppModule
-import com.gelostech.cleanarchitecture.di.modules.NetworkModule
-import com.gelostech.cleanarchitecture.di.modules.RoomModule
-import dagger.Component
+import com.gelostech.cleanarchitecture.di.AppInjector
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
 import timber.log.Timber
+import javax.inject.Inject
 
-class MyApplication : MultiDexApplication() {
-    private lateinit var appComponent: AppComponent
-    private lateinit var context: Context
+class MyApplication : MultiDexApplication(), HasActivityInjector {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
     override fun onCreate() {
         super.onCreate()
 
         Timber.plant(Timber.DebugTree())
-
-        context = this
-        appComponent = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .networkModule(NetworkModule())
-                .roomModule(RoomModule(this))
-                .build()
+        AppInjector.inject(this)
     }
 
-    fun getAppComponent(): AppComponent {
-        return appComponent
+    override fun activityInjector(): AndroidInjector<Activity> {
+        return dispatchingAndroidInjector
     }
-
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-    }
-
 }

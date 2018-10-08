@@ -51,16 +51,5 @@ open class NetworkModule {
         return retrofit.create(ApiService::class.java)
     }
 
-    @Provides
-    @Singleton
-    fun providePostsRepository(apiService: ApiService, postsDao: PostsDao): PostsRepository {
-        return PostsRepository(apiService, postsDao)
-    }
-
-    @Provides
-    @Singleton
-    fun provideViewModelFactory(postsRepository: PostsRepository): ViewModelProvider.Factory {
-        return ViewModelFactory(postsRepository)
-    }
 
 }
