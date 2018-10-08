@@ -7,8 +7,10 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import com.gelostech.cleanarchitecture.MyApplication
-import com.gelostech.cleanarchitecture.di.Injectable
+import com.gelostech.cleanarchitecture.di.modules.NetworkModule
+import com.gelostech.cleanarchitecture.di.modules.RoomModule
 import dagger.android.AndroidInjection
+import dagger.android.HasActivityInjector
 import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.HasSupportFragmentInjector
 
@@ -17,9 +19,10 @@ object AppInjector {
     private fun AppInjector() {}
 
     fun init(application: MyApplication) {
-        DaggerAppComponent.Builder()
+        DaggerAppComponent.builder()
                 .application(application)
-                .appModule(application)
+                .roomModule(RoomModule(application))
+                .networkModule(NetworkModule())
                 .build()
                 .inject(application)
 
@@ -55,7 +58,7 @@ object AppInjector {
     }
 
     private fun handleActivity(activity: Activity) {
-        if (activity is HasSupportFragmentInjector) {
+        if (activity is HasSupportFragmentInjector || activity is HasActivityInjector ) {
             AndroidInjection.inject(activity)
         }
 

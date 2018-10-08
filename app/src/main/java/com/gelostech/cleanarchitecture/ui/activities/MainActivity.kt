@@ -18,16 +18,17 @@ import com.gelostech.cleanarchitecture.utils.hideView
 import com.gelostech.cleanarchitecture.utils.showView
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class MainActivity : AppCompatActivity(), HasActivityInjector {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
     private lateinit var viewmodel: PostsViewModel
     private lateinit var adapter: PostsAdapter
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+    override fun activityInjector(): AndroidInjector<Activity> {
         return dispatchingAndroidInjector
     }
 }

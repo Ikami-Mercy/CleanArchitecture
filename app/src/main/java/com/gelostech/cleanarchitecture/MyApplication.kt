@@ -19,7 +19,7 @@ class MyApplication : MultiDexApplication(), HasActivityInjector {
         super.onCreate()
 
         Timber.plant(Timber.DebugTree())
-        AppInjector.inject(this)
+        AppInjector.init(this)
     }
 
     override fun activityInjector(): AndroidInjector<Activity> {
